@@ -50,16 +50,16 @@ func Test_errorMatcher_GetHttpCodeFromInternalError(t *testing.T) {
 		{
 			name:   "Get existing HTTP Code from internal error",
 			fields: fields{matchCatalog: memc},
-			args:   args{internalError: NewInternalError(AmadeusRequestHeaderEmptyTokenID)},
+			args:   args{internalError: NewInternalError(GenericUnknownError)},
 			wantErrorMatch: ErrorMappingRule{
-				InternalCode:       AmadeusRequestHeaderEmptyTokenID,
+				InternalCode:       GenericUnknownError,
 				ExternalHTTPStatus: http.StatusBadRequest,
 				ExternalMessage:    http.StatusText(http.StatusBadRequest)},
 		},
 		{
 			name:   "Get inexistent HTTP Code from internal error",
 			fields: fields{matchCatalog: memc},
-			args:   args{internalError: NewInternalError(AmadeusRequestHeaderUnknownSessionIdentifier)},
+			args:   args{internalError: NewInternalError(GenericUnknownError)},
 			wantErrorMatch: ErrorMappingRule{
 				InternalCode:       GenericUnknownError,
 				ExternalHTTPStatus: http.StatusInternalServerError,
@@ -89,7 +89,7 @@ func mockedErrorMatchingCatalog() (matchCatalog map[int]ErrorMappingRule) {
 		ExternalMessage:    http.StatusText(http.StatusInternalServerError)}
 
 	iem2 := &ErrorMappingRule{
-		InternalCode:       AmadeusRequestHeaderEmptyTokenID,
+		InternalCode:       BasicEmptyParameter,
 		ExternalHTTPStatus: http.StatusBadRequest,
 		ExternalMessage:    http.StatusText(http.StatusBadRequest)}
 
