@@ -1,0 +1,10 @@
+error-map:
+  - internal-code: 100
+    external-http-status: 500
+    external-message: "Internal Server Error"
+  - internal-code: 400
+    external-http-status: 500
+    external-message: "Internal Server Error"
+  - internal-code: 552
+    external-http-status: 400
+    external-message: "Bad Request"

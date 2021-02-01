@@ -1,0 +1,47 @@
+
+
+
+
+error-map:
+  - internal-code: 10
+    external-http-status: 500
+    external-message: "Internal Server Error"
+  - internal-code: 62
+    external-http-status: 400
+    external-message: "Bad Request"
+  - internal-code: 200
+    external-http-status: 504
+    external-message: "Waiting time deadline exceeded."
+  - internal-code: 201
+    external-http-status: 400
+    external-message: "Gateway redirection error"
+  - internal-code: 220
+    external-http-status: 403
+    external-message: "Authorization header is empty"
+  - internal-code: 221
+    external-http-status: 403
+    external-message: "Authorization header is incomplete"
+  - internal-code: 250
+    external-http-status: 403
+    external-message: "Introspected token is invalid"
+  - internal-code: 260
+    external-http-status: 403
+    external-message: "Token payload problems"
+  - internal-code: 261
+    external-http-status: 403
+    external-message: "No access key inside token payload"
+  - internal-code: 262
+    external-http-status: 403
+    external-message: "No client id inside token payload"
+  - internal-code: 263
+    external-http-status: 403
+    external-message: "No subject inside token payload"
+  - internal-code: 264
+    external-http-status: 403
+    external-message: "Security: no scope inside token payload"
+  - internal-code: 950
+    external-http-status: 500
+    external-message: "The needed implementation is incomplete"
+  - internal-code: 999
+    external-http-status: 500
+    external-message: "Internal Server Error"
