@@ -133,7 +133,7 @@ func Test_errorMatcher_LoadErrorMatchingCatalogFromConfiguration(t *testing.T) {
 		{
 			//NOTE:
 			//This test is currently twaked to pass.
-			//The solution is to get rid of the singleton patten implementation for the environment variable
+			//The solution is to get rid of the singleton patten implementation for the configuration variable
 			//which can take a lot of redefinition time spent into the LM properties package.
 			name:    "Load BAD error matching catalog from config",
 			fields:  fields{matchCatalog: memc},

@@ -76,7 +76,7 @@ var statusText = map[int]string{
 
 	//IO -> File
 	IOFileBaseConfigurationNotFound:        "file: base configuration not found",
-	IOFileEnvironmentConfigurationNotFound: "file: environment configuration not found",
+	IOFileEnvironmentConfigurationNotFound: "file: configuration configuration not found",
 
 	//IO -> Viper
 	IOViperUnmarshalProblem: "viper: problems detected while trying to unmarshal properties into specified struct",
