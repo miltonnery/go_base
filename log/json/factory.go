@@ -12,17 +12,17 @@ import (
 	"time"
 )
 
-type LifeMilesJSONLogFactory struct {
+type JSONLogFactory struct {
 	environment configuration.Config
 }
 
-func NewLifeMilesJSONLogFactory(environment configuration.Config) *LifeMilesJSONLogFactory {
-	return &LifeMilesJSONLogFactory{
+func NewLifeMilesJSONLogFactory(environment configuration.Config) *JSONLogFactory {
+	return &JSONLogFactory{
 		environment: environment,
 	}
 }
 
-func (lmf LifeMilesJSONLogFactory) Create(
+func (jlf JSONLogFactory) Create(
 	request *http.Request,
 	response *http.Response,
 	step string,
@@ -72,22 +72,22 @@ func (lmf LifeMilesJSONLogFactory) Create(
 	lmlJSON := NewLifeMilesLogDetailsJSON()
 	lmlJSON.SetUUID(requestUUID)
 	lmlJSON.SetIP(logRequest.RemoteAddr)
-	lmlJSON.SetMembershipNumber(lmf.environment.GetString("log.values.not-available"))
-	lmlJSON.SetChannel(lmf.environment.GetString("log.values.channel"))
+	lmlJSON.SetMembershipNumber(jlf.environment.GetString("log.values.not-available"))
+	lmlJSON.SetChannel(jlf.environment.GetString("log.values.channel"))
 	lmlJSON.SetTimeStamp(timestamp)
-	lmlJSON.SetServiceName(lmf.environment.GetString("log.values.service-name"))
+	lmlJSON.SetServiceName(jlf.environment.GetString("log.values.service-name"))
 	lmlJSON.SetHostname(hostName)
 	//lmlJSON.SetRequestBody(requestBody)
 	//lmlJSON.SetResponseBody(responseBody)
 	//lmlJSON.SetDestinationURL(logRequest.URL.Path)
 	lmlJSON.SetStep(step)
 	lmlJSON.SetLevel(level)
-	lmlJSON.SetProduct(lmf.environment.GetString("log.values.product"))
-	lmlJSON.SetApplication(lmf.environment.GetString("log.values.application"))
+	lmlJSON.SetProduct(jlf.environment.GetString("log.values.product"))
+	lmlJSON.SetApplication(jlf.environment.GetString("log.values.application"))
 	lmlJSON.SetClass(class)
 	lmlJSON.SetMethod(class)
-	lmlJSON.SetLanguage(lmf.environment.GetString("log.values.language"))
-	lmlJSON.SetThread(lmf.environment.GetString("log.values.thread"))
+	lmlJSON.SetLanguage(jlf.environment.GetString("log.values.language"))
+	lmlJSON.SetThread(jlf.environment.GetString("log.values.thread"))
 	lmlJSON.SetLogMessage(message)
 
 	return lmlJSON

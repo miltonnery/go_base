@@ -8,9 +8,9 @@ import (
 	"strings"
 )
 
-// LIFEMILES SERVICE LOG IMPLEMENTATION FOR JSON
+// SERVICE LOG IMPLEMENTATION FOR JSON
 
-type LifeMilesServiceLogJSON struct {
+type ServiceLogJSON struct {
 	environment configuration.Config
 	factory     log.LifemilesLogFactory
 	loggerJSON  lmLog.Logger
@@ -28,15 +28,15 @@ const (
 func NewLifeMilesServiceLogJSON(
 	environment configuration.Config,
 	factory log.LifemilesLogFactory,
-	loggerJSON lmLog.Logger) *LifeMilesServiceLogJSON {
-	return &LifeMilesServiceLogJSON{
+	loggerJSON lmLog.Logger) *ServiceLogJSON {
+	return &ServiceLogJSON{
 		environment: environment,
 		factory:     factory,
 		loggerJSON:  loggerJSON,
 	}
 }
 
-func (lmslJSON LifeMilesServiceLogJSON) Debug(request *http.Request, response *http.Response, step string, message string) {
+func (lmslJSON ServiceLogJSON) Debug(request *http.Request, response *http.Response, step string, message string) {
 	loggingLevel := lmslJSON.environment.GetString("log.logging-level")
 	if lmslJSON.checkLoggingLevel(loggingLevel, debug) {
 		levelInfo := lmslJSON.environment.GetString("log.values.log-level.debug")
@@ -45,7 +45,7 @@ func (lmslJSON LifeMilesServiceLogJSON) Debug(request *http.Request, response *h
 	}
 }
 
-func (lmslJSON LifeMilesServiceLogJSON) Info(request *http.Request, response *http.Response, step string, message string) {
+func (lmslJSON ServiceLogJSON) Info(request *http.Request, response *http.Response, step string, message string) {
 	loggingLevel := lmslJSON.environment.GetString("log.logging-level")
 	if lmslJSON.checkLoggingLevel(loggingLevel, info) {
 		levelInfo := lmslJSON.environment.GetString("log.values.log-level.informative")
@@ -54,7 +54,7 @@ func (lmslJSON LifeMilesServiceLogJSON) Info(request *http.Request, response *ht
 	}
 }
 
-func (lmslJSON LifeMilesServiceLogJSON) Warn(request *http.Request, response *http.Response, step string, message string) {
+func (lmslJSON ServiceLogJSON) Warn(request *http.Request, response *http.Response, step string, message string) {
 	loggingLevel := lmslJSON.environment.GetString("log.logging-level")
 	if lmslJSON.checkLoggingLevel(loggingLevel, warn) {
 		levelInfo := lmslJSON.environment.GetString("log.values.log-level.warning")
@@ -63,7 +63,7 @@ func (lmslJSON LifeMilesServiceLogJSON) Warn(request *http.Request, response *ht
 	}
 }
 
-func (lmslJSON LifeMilesServiceLogJSON) Error(request *http.Request, response *http.Response, step string, message string) {
+func (lmslJSON ServiceLogJSON) Error(request *http.Request, response *http.Response, step string, message string) {
 	loggingLevel := lmslJSON.environment.GetString("log.logging-level")
 	if lmslJSON.checkLoggingLevel(loggingLevel, error) {
 		levelInfo := lmslJSON.environment.GetString("log.values.log-level.error")
@@ -72,7 +72,7 @@ func (lmslJSON LifeMilesServiceLogJSON) Error(request *http.Request, response *h
 	}
 }
 
-func (lmslJSON LifeMilesServiceLogJSON) Fatal(request *http.Request, response *http.Response, step string, message string) {
+func (lmslJSON ServiceLogJSON) Fatal(request *http.Request, response *http.Response, step string, message string) {
 	loggingLevel := lmslJSON.environment.GetString("log.logging-level")
 	if lmslJSON.checkLoggingLevel(loggingLevel, fatal) {
 		levelInfo := lmslJSON.environment.GetString("log.values.log-level.fatal")
@@ -81,7 +81,7 @@ func (lmslJSON LifeMilesServiceLogJSON) Fatal(request *http.Request, response *h
 	}
 }
 
-func (lmslJSON LifeMilesServiceLogJSON) checkLoggingLevel(loggingLevel string, loggingType string) (permission bool) {
+func (lmslJSON ServiceLogJSON) checkLoggingLevel(loggingLevel string, loggingType string) (permission bool) {
 
 	loggingLevel = strings.ToLower(loggingLevel)
 	switch loggingLevel {

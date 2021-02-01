@@ -28,10 +28,10 @@ func TestNewLifeMilesServiceLogJSON(t *testing.T) {
 	tests := []struct {
 		name string
 		args args
-		want *LifeMilesServiceLogJSON
+		want *ServiceLogJSON
 	}{
 		{
-			name: "Create new LifeMilesServiceLogJSON struct",
+			name: "Create new ServiceLogJSON struct",
 			args: args{
 				environment: mockedConfiguration,
 				factory:     mockedFactory,
@@ -52,8 +52,8 @@ func TestNewLifeMilesServiceLogJSON(t *testing.T) {
 func makeMockedNewLifeMilesServiceLogJSON(
 	environment configuration.Config,
 	factory svcLog.LifemilesLogFactory,
-	loggerJSON lmLog.Logger) *LifeMilesServiceLogJSON {
-	return &LifeMilesServiceLogJSON{
+	loggerJSON lmLog.Logger) *ServiceLogJSON {
+	return &ServiceLogJSON{
 		environment: environment,
 		factory:     factory,
 		loggerJSON:  loggerJSON,
@@ -104,7 +104,7 @@ func TestLifeMilesServiceLogJSON_Debug(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			lmslJSON := LifeMilesServiceLogJSON{
+			lmslJSON := ServiceLogJSON{
 				environment: tt.fields.environment,
 				factory:     tt.fields.factory,
 				loggerJSON:  tt.fields.loggerJSON,
@@ -159,7 +159,7 @@ func TestLifeMilesServiceLogJSON_Info(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			lmslJSON := LifeMilesServiceLogJSON{
+			lmslJSON := ServiceLogJSON{
 				environment: tt.fields.environment,
 				factory:     tt.fields.factory,
 				loggerJSON:  tt.fields.loggerJSON,
@@ -214,7 +214,7 @@ func TestLifeMilesServiceLogJSON_Warn(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			lmslJSON := LifeMilesServiceLogJSON{
+			lmslJSON := ServiceLogJSON{
 				environment: tt.fields.environment,
 				factory:     tt.fields.factory,
 				loggerJSON:  tt.fields.loggerJSON,
@@ -269,7 +269,7 @@ func TestLifeMilesServiceLogJSON_Error(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			lmslJSON := LifeMilesServiceLogJSON{
+			lmslJSON := ServiceLogJSON{
 				environment: tt.fields.environment,
 				factory:     tt.fields.factory,
 				loggerJSON:  tt.fields.loggerJSON,
@@ -324,7 +324,7 @@ func TestLifeMilesServiceLogJSON_Fatal(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			lmslJSON := LifeMilesServiceLogJSON{
+			lmslJSON := ServiceLogJSON{
 				environment: tt.fields.environment,
 				factory:     tt.fields.factory,
 				loggerJSON:  tt.fields.loggerJSON,

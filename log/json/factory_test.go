@@ -26,7 +26,7 @@ func TestNewLifeMilesJSONLogFactory(t *testing.T) {
 	tests := []struct {
 		name string
 		args args
-		want *LifeMilesJSONLogFactory
+		want *JSONLogFactory
 	}{
 		{
 			name: "Create new JSON log factory",
@@ -49,8 +49,8 @@ func makeMockedConfiguration() (environment configuration.Config) {
 	return
 }
 
-func makeMockedNewLifeMilesJSONLogFactory(environment configuration.Config) *LifeMilesJSONLogFactory {
-	return &LifeMilesJSONLogFactory{
+func makeMockedNewLifeMilesJSONLogFactory(environment configuration.Config) *JSONLogFactory {
+	return &JSONLogFactory{
 		environment: environment,
 	}
 }
@@ -97,7 +97,7 @@ func TestLifeMilesJSONLogFactory_Create(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			lmf := LifeMilesJSONLogFactory{
+			lmf := JSONLogFactory{
 				environment: tt.fields.environment,
 			}
 			if got := lmf.Create(tt.args.request, tt.args.response, tt.args.step, tt.args.level, tt.args.message); !reflect.DeepEqual(got, tt.want) {
