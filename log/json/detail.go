@@ -22,7 +22,7 @@ type LogDetailsJSON struct {
 	LogMessage     string `json:"logMessage"`     // extra details message
 }
 
-func NewLifeMilesLogDetailsJSON() *LogDetailsJSON {
+func NewLogDetailsJSON() *LogDetailsJSON {
 	return &LogDetailsJSON{
 		UUID:           "",
 		IP:             "",

@@ -2,7 +2,7 @@ package json
 
 import (
 	"git.lifemiles.net/lm-go-libraries/lifemiles-go/configuration"
-	lmLog "git.lifemiles.net/lm-go-libraries/lifemiles-go/log"
+	"go.uber.org/zap"
 	"miltonnery/go_base/log"
 	"net/http"
 	"strings"
@@ -13,7 +13,7 @@ import (
 type ServiceLogJSON struct {
 	environment configuration.Config
 	factory     log.LogFactory
-	loggerJSON  lmLog.Logger
+	zapLogger   zap.SugaredLogger
 }
 
 //Constant definition
@@ -25,63 +25,111 @@ const (
 	fatal = "fatal"
 )
 
-func NewLifeMilesServiceLogJSON(
+func NewServiceLogJSON(
 	environment configuration.Config,
 	factory log.LogFactory,
-	loggerJSON lmLog.Logger) *ServiceLogJSON {
+	loggerJSON zap.SugaredLogger) *ServiceLogJSON {
 	return &ServiceLogJSON{
 		environment: environment,
 		factory:     factory,
-		loggerJSON:  loggerJSON,
+		zapLogger:   loggerJSON,
 	}
 }
 
-func (lmslJSON ServiceLogJSON) Debug(request *http.Request, response *http.Response, step string, message string) {
-	loggingLevel := lmslJSON.environment.GetString("log.logging-level")
-	if lmslJSON.checkLoggingLevel(loggingLevel, debug) {
-		levelInfo := lmslJSON.environment.GetString("log.values.log-level.debug")
-		log := lmslJSON.factory.Create(request, response, step, levelInfo, message)
-		lmslJSON.loggerJSON.Debug(log.GetLogMessage(), "LM_LOG", log)
+func (sLJSON ServiceLogJSON) Debug(request *http.Request, response *http.Response, step string, message string) {
+	loggingLevel := sLJSON.environment.GetString("log.logging-level")
+	if sLJSON.checkLoggingLevel(loggingLevel, debug) {
+		levelInfo := sLJSON.environment.GetString("log.values.log-level.debug")
+		log := sLJSON.factory.Create(request, response, step, levelInfo, message)
+		sLJSON.zapLogger.Debug(log.GetLogMessage(), "LM_LOG", log)
 	}
 }
 
-func (lmslJSON ServiceLogJSON) Info(request *http.Request, response *http.Response, step string, message string) {
-	loggingLevel := lmslJSON.environment.GetString("log.logging-level")
-	if lmslJSON.checkLoggingLevel(loggingLevel, info) {
-		levelInfo := lmslJSON.environment.GetString("log.values.log-level.informative")
-		log := lmslJSON.factory.Create(request, response, step, levelInfo, message)
-		lmslJSON.loggerJSON.Info(log.GetLogMessage(), "LM_LOG", log)
+func (sLJSON ServiceLogJSON) Info(request *http.Request, response *http.Response, step string, message string) {
+	loggingLevel := sLJSON.environment.GetString("log.logging-level")
+	if sLJSON.checkLoggingLevel(loggingLevel, info) {
+		levelInfo := sLJSON.environment.GetString("log.values.log-level.informative")
+		log := sLJSON.factory.Create(request, response, step, levelInfo, message)
+		sLJSON.zapLogger.Info(log.GetLogMessage(), "LM_LOG", log)
 	}
 }
 
-func (lmslJSON ServiceLogJSON) Warn(request *http.Request, response *http.Response, step string, message string) {
-	loggingLevel := lmslJSON.environment.GetString("log.logging-level")
-	if lmslJSON.checkLoggingLevel(loggingLevel, warn) {
-		levelInfo := lmslJSON.environment.GetString("log.values.log-level.warning")
-		log := lmslJSON.factory.Create(request, response, step, levelInfo, message)
-		lmslJSON.loggerJSON.Warn(log.GetLogMessage(), "LM_LOG", log)
+func (sLJSON ServiceLogJSON) Warn(request *http.Request, response *http.Response, step string, message string) {
+	loggingLevel := sLJSON.environment.GetString("log.logging-level")
+	if sLJSON.checkLoggingLevel(loggingLevel, warn) {
+		levelInfo := sLJSON.environment.GetString("log.values.log-level.warning")
+		log := sLJSON.factory.Create(request, response, step, levelInfo, message)
+		sLJSON.zapLogger.Warn(log.GetLogMessage(), "LM_LOG", log)
 	}
 }
 
-func (lmslJSON ServiceLogJSON) Error(request *http.Request, response *http.Response, step string, message string) {
-	loggingLevel := lmslJSON.environment.GetString("log.logging-level")
-	if lmslJSON.checkLoggingLevel(loggingLevel, error) {
-		levelInfo := lmslJSON.environment.GetString("log.values.log-level.error")
-		log := lmslJSON.factory.Create(request, response, step, levelInfo, message)
-		lmslJSON.loggerJSON.Error(log.GetLogMessage(), "LM_LOG", log)
+func (sLJSON ServiceLogJSON) Error(request *http.Request, response *http.Response, step string, message string) {
+	loggingLevel := sLJSON.environment.GetString("log.logging-level")
+	if sLJSON.checkLoggingLevel(loggingLevel, error) {
+		levelInfo := sLJSON.environment.GetString("log.values.log-level.error")
+		log := sLJSON.factory.Create(request, response, step, levelInfo, message)
+		sLJSON.zapLogger.Error(log.GetLogMessage(), "LM_LOG", log)
 	}
 }
 
-func (lmslJSON ServiceLogJSON) Fatal(request *http.Request, response *http.Response, step string, message string) {
-	loggingLevel := lmslJSON.environment.GetString("log.logging-level")
-	if lmslJSON.checkLoggingLevel(loggingLevel, fatal) {
-		levelInfo := lmslJSON.environment.GetString("log.values.log-level.fatal")
-		log := lmslJSON.factory.Create(request, response, step, levelInfo, message)
-		lmslJSON.loggerJSON.Error(log.GetLogMessage(), "LM_LOG", log)
+func (sLJSON ServiceLogJSON) Fatal(request *http.Request, response *http.Response, step string, message string) {
+	loggingLevel := sLJSON.environment.GetString("log.logging-level")
+	if sLJSON.checkLoggingLevel(loggingLevel, fatal) {
+		levelInfo := sLJSON.environment.GetString("log.values.log-level.fatal")
+		log := sLJSON.factory.Create(request, response, step, levelInfo, message)
+		sLJSON.zapLogger.Error(log.GetLogMessage(), "LM_LOG", log)
 	}
 }
 
-func (lmslJSON ServiceLogJSON) checkLoggingLevel(loggingLevel string, loggingType string) (permission bool) {
+// Lite logging versions -----------------------------------------------------------------------------------------------/
+func (sLJSON ServiceLogJSON) DebugLite(step string, message string) {
+	loggingLevel := sLJSON.environment.GetString("log.logging-level")
+	if sLJSON.checkLoggingLevel(loggingLevel, debug) {
+		levelInfo := sLJSON.environment.GetString("log.values.log-level.debug")
+		log := sLJSON.factory.CreateLite(step, levelInfo, message)
+		sLJSON.zapLogger.Debug(log.GetLogMessage(), "LM_LOG", log)
+	}
+}
+
+func (sLJSON ServiceLogJSON) InfoLite(step string, message string) {
+	loggingLevel := sLJSON.environment.GetString("log.logging-level")
+	if sLJSON.checkLoggingLevel(loggingLevel, info) {
+		levelInfo := sLJSON.environment.GetString("log.values.log-level.informative")
+		log := sLJSON.factory.CreateLite(step, levelInfo, message)
+		sLJSON.zapLogger.Info(log.GetLogMessage(), "LM_LOG", log)
+	}
+}
+
+func (sLJSON ServiceLogJSON) WarnLite(step string, message string) {
+	loggingLevel := sLJSON.environment.GetString("log.logging-level")
+	if sLJSON.checkLoggingLevel(loggingLevel, warn) {
+		levelInfo := sLJSON.environment.GetString("log.values.log-level.warning")
+		log := sLJSON.factory.CreateLite(step, levelInfo, message)
+		sLJSON.zapLogger.Warn(log.GetLogMessage(), "LM_LOG", log)
+	}
+}
+
+func (sLJSON ServiceLogJSON) ErrorLite(step string, message string) {
+	loggingLevel := sLJSON.environment.GetString("log.logging-level")
+	if sLJSON.checkLoggingLevel(loggingLevel, error) {
+		levelInfo := sLJSON.environment.GetString("log.values.log-level.error")
+		log := sLJSON.factory.CreateLite(step, levelInfo, message)
+		sLJSON.zapLogger.Error(log.GetLogMessage(), "LM_LOG", log)
+	}
+}
+
+func (sLJSON ServiceLogJSON) FatalLite(step string, message string) {
+	loggingLevel := sLJSON.environment.GetString("log.logging-level")
+	if sLJSON.checkLoggingLevel(loggingLevel, fatal) {
+		levelInfo := sLJSON.environment.GetString("log.values.log-level.fatal")
+		log := sLJSON.factory.CreateLite(step, levelInfo, message)
+		sLJSON.zapLogger.Error(log.GetLogMessage(), "LM_LOG", log)
+	}
+}
+
+// Auxiliary methods and functions -------------------------------------------------------------------------------------/
+
+func (sLJSON ServiceLogJSON) checkLoggingLevel(loggingLevel string, loggingType string) (permission bool) {
 
 	loggingLevel = strings.ToLower(loggingLevel)
 	switch loggingLevel {

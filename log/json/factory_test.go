@@ -20,7 +20,7 @@ import (
 // ---------------------------------------------------------------------------------------------------------------------/
 func TestNewLifeMilesJSONLogFactory(t *testing.T) {
 	mockedConfiguration := makeMockedConfiguration()
-	fakeFactory := makeMockedNewLifeMilesJSONLogFactory(mockedConfiguration)
+	fakeFactory := makeMockedNewJSONLogFactory(mockedConfiguration)
 	type args struct {
 		environment configuration.Configuration
 	}
@@ -50,7 +50,7 @@ func makeMockedConfiguration() (environment configuration.Configuration) {
 	return
 }
 
-func makeMockedNewLifeMilesJSONLogFactory(configuration configuration.Configuration) *LogFactory {
+func makeMockedNewJSONLogFactory(configuration configuration.Configuration) *LogFactory {
 	return &LogFactory{
 		configuration: configuration,
 	}
@@ -135,7 +135,7 @@ func makeMockedLog(environment configuration.Configuration, request *http.Reques
 	class := file + ":" + lineString
 
 	//Log data filling -------------------------------------------------------------------------------------------------/
-	lmlJSON := NewLifeMilesLogDetailsJSON()
+	lmlJSON := NewLogDetailsJSON()
 	lmlJSON.SetUUID(requestUUID)
 	lmlJSON.SetIP(request.RemoteAddr)
 	lmlJSON.SetTimeStamp(timestamp)

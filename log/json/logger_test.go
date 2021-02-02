@@ -2,10 +2,9 @@ package json
 
 import (
 	"context"
-	svcLog "git.lifemiles.net/lm-access/acc-gateway-svc/log"
-	"git.lifemiles.net/lm-go-libraries/lifemiles-go/configuration"
-	lmLog "git.lifemiles.net/lm-go-libraries/lifemiles-go/log"
 	"github.com/google/uuid"
+	"go.uber.org/zap"
+	"miltonnery/go_base/configuration"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -15,15 +14,15 @@ import (
 
 func TestNewLifeMilesServiceLogJSON(t *testing.T) {
 	mockedConfiguration := makeMockedConfiguration()
-	mockedFactory := makeMockedNewLifeMilesJSONLogFactory(mockedConfiguration)
-	mockedLogger := lmLog.NewLogger()
+	mockedFactory := makeMockedNewJSONLogFactory(mockedConfiguration)
+	mockedLogger := NewLogDetailsJSON()
 
 	mockedLifeMilesserviceLogJSON := makeMockedNewLifeMilesServiceLogJSON(mockedConfiguration, mockedFactory, mockedLogger)
 
 	type args struct {
-		environment configuration.Config
-		factory     svcLog.LifemilesLogFactory
-		loggerJSON  lmLog.Logger
+		environment configuration.Configuration
+		factory     *LogFactory
+		loggerJSON  zap.SugaredLogger
 	}
 	tests := []struct {
 		name string
@@ -42,21 +41,21 @@ func TestNewLifeMilesServiceLogJSON(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := NewLifeMilesServiceLogJSON(tt.args.environment, tt.args.factory, tt.args.loggerJSON); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("NewLifeMilesServiceLogJSON() = %v, want %v", got, tt.want)
+			if got := NewServiceLogJSON(tt.args.environment, tt.args.factory, tt.args.loggerJSON); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("NewServiceLogJSON() = %v, want %v", got, tt.want)
 			}
 		})
 	}
 }
 
 func makeMockedNewLifeMilesServiceLogJSON(
-	environment configuration.Config,
-	factory svcLog.LifemilesLogFactory,
-	loggerJSON lmLog.Logger) *ServiceLogJSON {
+	environment configuration.Configuration,
+	factory LogFactory,
+	loggerJSON *LogDetailsJSON) *ServiceLogJSON {
 	return &ServiceLogJSON{
 		environment: environment,
 		factory:     factory,
-		loggerJSON:  loggerJSON,
+		zapLogger:   loggerJSON,
 	}
 }
 
@@ -64,17 +63,17 @@ func makeMockedNewLifeMilesServiceLogJSON(
 
 func TestLifeMilesServiceLogJSON_Debug(t *testing.T) {
 	mockedConfiguration := makeMockedConfiguration()
-	mockedFactory := makeMockedNewLifeMilesJSONLogFactory(mockedConfiguration)
-	mockedLogger := lmLog.NewLogger()
+	mockedFactory := makeMockedNewJSONLogFactory(mockedConfiguration)
+	mockedLogger := NewLogDetailsJSON()
 
 	mockedRequest := makeMockedRequest()
 	step := "TEST STEP"
 	message := "TEST MESSAGE"
 
 	type fields struct {
-		environment configuration.Config
-		factory     svcLog.LifemilesLogFactory
-		loggerJSON  lmLog.Logger
+		environment configuration.Configuration
+		factory     *LogFactory
+		loggerJSON  *LogDetailsJSON
 	}
 	type args struct {
 		request  *http.Request
@@ -107,7 +106,7 @@ func TestLifeMilesServiceLogJSON_Debug(t *testing.T) {
 			lmslJSON := ServiceLogJSON{
 				environment: tt.fields.environment,
 				factory:     tt.fields.factory,
-				loggerJSON:  tt.fields.loggerJSON,
+				zapLogger:   tt.fields.loggerJSON,
 			}
 			lmslJSON.Debug(tt.args.request, tt.args.response, tt.args.step, tt.args.message)
 		})
@@ -119,7 +118,7 @@ func TestLifeMilesServiceLogJSON_Debug(t *testing.T) {
 func TestLifeMilesServiceLogJSON_Info(t *testing.T) {
 	mockedConfiguration := makeMockedConfiguration()
 	mockedConfiguration.Set("log.logging-level", "INFO")
-	mockedFactory := makeMockedNewLifeMilesJSONLogFactory(mockedConfiguration)
+	mockedFactory := makeMockedNewJSONLogFactory(mockedConfiguration)
 	mockedLogger := lmLog.NewLogger()
 
 	mockedRequest := makeMockedRequest()
@@ -127,9 +126,9 @@ func TestLifeMilesServiceLogJSON_Info(t *testing.T) {
 	message := "TEST MESSAGE"
 
 	type fields struct {
-		environment configuration.Config
-		factory     svcLog.LifemilesLogFactory
-		loggerJSON  lmLog.Logger
+		environment configuration.Configuration
+		factory     LogFactory
+		loggerJSON  *LogDetailsJSON
 	}
 	type args struct {
 		request  *http.Request
@@ -162,7 +161,7 @@ func TestLifeMilesServiceLogJSON_Info(t *testing.T) {
 			lmslJSON := ServiceLogJSON{
 				environment: tt.fields.environment,
 				factory:     tt.fields.factory,
-				loggerJSON:  tt.fields.loggerJSON,
+				zapLogger:   tt.fields.loggerJSON,
 			}
 			lmslJSON.Info(tt.args.request, tt.args.response, tt.args.step, tt.args.message)
 		})
@@ -174,7 +173,7 @@ func TestLifeMilesServiceLogJSON_Info(t *testing.T) {
 func TestLifeMilesServiceLogJSON_Warn(t *testing.T) {
 	mockedConfiguration := makeMockedConfiguration()
 	mockedConfiguration.Set("log.logging-level", "WARN")
-	mockedFactory := makeMockedNewLifeMilesJSONLogFactory(mockedConfiguration)
+	mockedFactory := makeMockedNewJSONLogFactory(mockedConfiguration)
 	mockedLogger := lmLog.NewLogger()
 
 	mockedRequest := makeMockedRequest()
@@ -182,9 +181,9 @@ func TestLifeMilesServiceLogJSON_Warn(t *testing.T) {
 	message := "TEST MESSAGE"
 
 	type fields struct {
-		environment configuration.Config
-		factory     svcLog.LifemilesLogFactory
-		loggerJSON  lmLog.Logger
+		environment configuration.Configuration
+		factory     LogFactory
+		loggerJSON  *LogDetailsJSON
 	}
 	type args struct {
 		request  *http.Request
@@ -217,7 +216,7 @@ func TestLifeMilesServiceLogJSON_Warn(t *testing.T) {
 			lmslJSON := ServiceLogJSON{
 				environment: tt.fields.environment,
 				factory:     tt.fields.factory,
-				loggerJSON:  tt.fields.loggerJSON,
+				zapLogger:   tt.fields.loggerJSON,
 			}
 			lmslJSON.Warn(tt.args.request, tt.args.response, tt.args.step, tt.args.message)
 		})
@@ -229,7 +228,7 @@ func TestLifeMilesServiceLogJSON_Warn(t *testing.T) {
 func TestLifeMilesServiceLogJSON_Error(t *testing.T) {
 	mockedConfiguration := makeMockedConfiguration()
 	mockedConfiguration.Set("log.logging-level", "ERROR")
-	mockedFactory := makeMockedNewLifeMilesJSONLogFactory(mockedConfiguration)
+	mockedFactory := makeMockedNewJSONLogFactory(mockedConfiguration)
 	mockedLogger := lmLog.NewLogger()
 
 	mockedRequest := makeMockedRequest()
@@ -237,9 +236,9 @@ func TestLifeMilesServiceLogJSON_Error(t *testing.T) {
 	message := "TEST MESSAGE"
 
 	type fields struct {
-		environment configuration.Config
-		factory     svcLog.LifemilesLogFactory
-		loggerJSON  lmLog.Logger
+		environment configuration.Configuration
+		factory     LogFactory
+		loggerJSON  *LogDetailsJSON
 	}
 	type args struct {
 		request  *http.Request
@@ -272,7 +271,7 @@ func TestLifeMilesServiceLogJSON_Error(t *testing.T) {
 			lmslJSON := ServiceLogJSON{
 				environment: tt.fields.environment,
 				factory:     tt.fields.factory,
-				loggerJSON:  tt.fields.loggerJSON,
+				zapLogger:   tt.fields.loggerJSON,
 			}
 			lmslJSON.Error(tt.args.request, tt.args.response, tt.args.step, tt.args.message)
 		})
@@ -284,7 +283,7 @@ func TestLifeMilesServiceLogJSON_Error(t *testing.T) {
 func TestLifeMilesServiceLogJSON_Fatal(t *testing.T) {
 	mockedConfiguration := makeMockedConfiguration()
 	mockedConfiguration.Set("log.logging-level", "FATAL")
-	mockedFactory := makeMockedNewLifeMilesJSONLogFactory(mockedConfiguration)
+	mockedFactory := makeMockedNewJSONLogFactory(mockedConfiguration)
 	mockedLogger := lmLog.NewLogger()
 
 	mockedRequest := makeMockedRequest()
@@ -292,9 +291,9 @@ func TestLifeMilesServiceLogJSON_Fatal(t *testing.T) {
 	message := "TEST MESSAGE"
 
 	type fields struct {
-		environment configuration.Config
-		factory     svcLog.LifemilesLogFactory
-		loggerJSON  lmLog.Logger
+		environment configuration.Configuration
+		factory     LogFactory
+		loggerJSON  *LogDetailsJSON
 	}
 	type args struct {
 		request  *http.Request
@@ -327,7 +326,7 @@ func TestLifeMilesServiceLogJSON_Fatal(t *testing.T) {
 			lmslJSON := ServiceLogJSON{
 				environment: tt.fields.environment,
 				factory:     tt.fields.factory,
-				loggerJSON:  tt.fields.loggerJSON,
+				zapLogger:   tt.fields.loggerJSON,
 			}
 			lmslJSON.Fatal(tt.args.request, tt.args.response, tt.args.step, tt.args.message)
 		})
