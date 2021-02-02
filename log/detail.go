@@ -1,18 +1,14 @@
 package log
 
-// LIFEMILES' LOG STRUCTURE DEFINITION
+// LOGGER STRUCTURE DEFINITION
 // LogBuilder is the interface that every concrete implementation should obey
-type LifeMilesLogDetail interface {
+type Detail interface {
 
 	//SETTER DEFINITION
 	// SetUUID sets the UUID created for the log
 	SetUUID(uuID string)
 	// SetIP sets the IP
 	SetIP(IP string)
-	// SetMembershipNumber sets the membership number provided by the client
-	SetMembershipNumber(membershipNumber string)
-	// SetChannel sets the provided LifeMile's channel: Web, Mobile, White label an so on
-	SetChannel(channel string)
 	// SetTimeStamp sets the provided timestamp in the format DD/MM/YYYY HH:MM:SS
 	SetTimeStamp(timeStamp string)
 	// SetServiceName sets the service name where the log is being generated
@@ -39,8 +35,6 @@ type LifeMilesLogDetail interface {
 	SetMethod(method string)
 	// SetLanguage sets the language
 	SetLanguage(language string)
-	// SetThread sets thread where the request is running
-	SetThread(threadID string)
 	// SetLogMessage sets the log message providing more specific details
 	SetLogMessage(logMessage string)
 
@@ -49,10 +43,6 @@ type LifeMilesLogDetail interface {
 	GetUUID() (uuID string)
 	// SetIP sets the IP
 	GetIP() (IP string)
-	// SetMembershipNumber sets the membership number provided by the client
-	GetMembershipNumber() (membershipNumber string)
-	// SetChannel sets the provided LifeMile's channel: Web, Mobile, White label an so on
-	GetChannel() (channel string)
 	// SetTimeStamp sets the provided timestamp in the format DD/MM/YYYY HH:MM:SS
 	GetTimeStamp() (timeStamp string)
 	// SetServiceName sets the service name where the log is being generated
@@ -80,7 +70,5 @@ type LifeMilesLogDetail interface {
 	// SetLanguage sets the language
 	GetLanguage() (language string)
 	// SetThread sets thread where the request is running
-	GetThread() (threadID string)
-	// SetLogMessage sets the log message providing more specific details
 	GetLogMessage() (logMessage string)
 }

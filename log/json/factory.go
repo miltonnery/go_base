@@ -1,8 +1,8 @@
 package json
 
 import (
-	"git.lifemiles.net/lm-access/acc-gateway-svc/log"
-	"git.lifemiles.net/lm-go-libraries/lifemiles-go/configuration"
+	"miltonnery/go_base/configuration"
+	"miltonnery/go_base/log"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -12,22 +12,22 @@ import (
 	"time"
 )
 
-type JSONLogFactory struct {
-	environment configuration.Config
+type LogFactory struct {
+	configuration configuration.Configuration
 }
 
-func NewLifeMilesJSONLogFactory(environment configuration.Config) *JSONLogFactory {
-	return &JSONLogFactory{
-		environment: environment,
+func NewLifeMilesJSONLogFactory(configuration configuration.Configuration) *LogFactory {
+	return &LogFactory{
+		configuration: configuration,
 	}
 }
 
-func (jlf JSONLogFactory) Create(
+func (jlf LogFactory) Create(
 	request *http.Request,
 	response *http.Response,
 	step string,
 	level string,
-	message string) log.LifeMilesLogDetail {
+	message string) log.Detail {
 
 	//Log data verification --------------------------------------------------------------------------------------------/
 	//Filling nil values for avoiding errors during runtime
@@ -72,22 +72,19 @@ func (jlf JSONLogFactory) Create(
 	lmlJSON := NewLifeMilesLogDetailsJSON()
 	lmlJSON.SetUUID(requestUUID)
 	lmlJSON.SetIP(logRequest.RemoteAddr)
-	lmlJSON.SetMembershipNumber(jlf.environment.GetString("log.values.not-available"))
-	lmlJSON.SetChannel(jlf.environment.GetString("log.values.channel"))
 	lmlJSON.SetTimeStamp(timestamp)
-	lmlJSON.SetServiceName(jlf.environment.GetString("log.values.service-name"))
+	lmlJSON.SetServiceName(jlf.configuration.GetString("log.values.service-name"))
 	lmlJSON.SetHostname(hostName)
 	//lmlJSON.SetRequestBody(requestBody)
 	//lmlJSON.SetResponseBody(responseBody)
 	//lmlJSON.SetDestinationURL(logRequest.URL.Path)
 	lmlJSON.SetStep(step)
 	lmlJSON.SetLevel(level)
-	lmlJSON.SetProduct(jlf.environment.GetString("log.values.product"))
-	lmlJSON.SetApplication(jlf.environment.GetString("log.values.application"))
+	lmlJSON.SetProduct(jlf.configuration.GetString("log.values.product"))
+	lmlJSON.SetApplication(jlf.configuration.GetString("log.values.application"))
 	lmlJSON.SetClass(class)
 	lmlJSON.SetMethod(class)
-	lmlJSON.SetLanguage(jlf.environment.GetString("log.values.language"))
-	lmlJSON.SetThread(jlf.environment.GetString("log.values.thread"))
+	lmlJSON.SetLanguage(jlf.configuration.GetString("log.values.language"))
 	lmlJSON.SetLogMessage(message)
 
 	return lmlJSON

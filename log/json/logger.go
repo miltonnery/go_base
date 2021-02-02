@@ -1,9 +1,9 @@
 package json
 
 import (
-	"git.lifemiles.net/lm-access/acc-gateway-svc/log"
 	"git.lifemiles.net/lm-go-libraries/lifemiles-go/configuration"
 	lmLog "git.lifemiles.net/lm-go-libraries/lifemiles-go/log"
+	"miltonnery/go_base/log"
 	"net/http"
 	"strings"
 )
@@ -12,7 +12,7 @@ import (
 
 type ServiceLogJSON struct {
 	environment configuration.Config
-	factory     log.LifemilesLogFactory
+	factory     log.LogFactory
 	loggerJSON  lmLog.Logger
 }
 
@@ -27,7 +27,7 @@ const (
 
 func NewLifeMilesServiceLogJSON(
 	environment configuration.Config,
-	factory log.LifemilesLogFactory,
+	factory log.LogFactory,
 	loggerJSON lmLog.Logger) *ServiceLogJSON {
 	return &ServiceLogJSON{
 		environment: environment,

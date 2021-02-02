@@ -4,48 +4,42 @@ package json
 
 //Struct for logs formatted in JSON
 type LogDetailsJSON struct {
-	UUID             string `json:"uuid"`                        //Unique tracking identifier
-	IP               string `json:"ip"`                          //Remote client IP
-	MembershipNumber string `json:"membership_number,omitempty"` //Provided or found MembershipNumber
-	Channel          string `json:"channel,omitempty"`           //Provided Channel: web, cce, wl, mobile and so on
-	TimeStamp        string `json:"timestamp"`                   //Log creation time: DD/MM/YYYY HH:MM:SS
-	ServiceName      string `json:"service"`                     //Microservice name
-	Hostname         string `json:"hostname"`                    //Name of pod
-	RequestBody      string `json:"request"`                     //Client request
-	ResponseBody     string `json:"response"`                    //Redirected service response
-	DestinationURL   string `json:"destinationUrl"`              //Requested path before redirection
-	Step             string `json:"step"`                        //Paso o contexto que se está ejecutando (cotización, pago, envío de correo, etc.)
-	Level            string `json:"level"`                       //Log level: Debug, Info, Warn or Error
-	Product          string `json:"product"`                     // LifeMiles product
-	Application      string `json:"application"`                 //Application name
-	Class            string `json:"class"`                       //requested service name
-	Method           string `json:"method"`                      // response status
-	Language         string `json:"language"`                    // reason of response
-	Thread           string `json:"thread"`                      // request thread or goroutine containing the call
-	LogMessage       string `json:"logMessage"`                  // extra details message
+	UUID           string `json:"uuid"`           //Unique tracking identifier
+	IP             string `json:"ip"`             //Remote client IP
+	TimeStamp      string `json:"timestamp"`      //Log creation time: DD/MM/YYYY HH:MM:SS
+	ServiceName    string `json:"service"`        //Microservice name
+	Hostname       string `json:"hostname"`       //Name of pod
+	RequestBody    string `json:"request"`        //Client request
+	ResponseBody   string `json:"response"`       //Redirected service response
+	DestinationURL string `json:"destinationUrl"` //Requested path before redirection
+	Step           string `json:"step"`           //Paso o contexto que se está ejecutando (cotización, pago, envío de correo, etc.)
+	Level          string `json:"level"`          //Log level: Debug, Info, Warn or Error
+	Product        string `json:"product"`        // LifeMiles product
+	Application    string `json:"application"`    //Application name
+	Class          string `json:"class"`          //requested service name
+	Method         string `json:"method"`         // response status
+	Language       string `json:"language"`       // reason of response
+	LogMessage     string `json:"logMessage"`     // extra details message
 }
 
 func NewLifeMilesLogDetailsJSON() *LogDetailsJSON {
 	return &LogDetailsJSON{
-		UUID:             "",
-		IP:               "",
-		MembershipNumber: "",
-		Channel:          "",
-		TimeStamp:        "",
-		ServiceName:      "",
-		Hostname:         "",
-		RequestBody:      "",
-		ResponseBody:     "",
-		DestinationURL:   "",
-		Step:             "",
-		Level:            "",
-		Product:          "",
-		Application:      "",
-		Class:            "",
-		Method:           "",
-		Language:         "",
-		Thread:           "",
-		LogMessage:       "",
+		UUID:           "",
+		IP:             "",
+		TimeStamp:      "",
+		ServiceName:    "",
+		Hostname:       "",
+		RequestBody:    "",
+		ResponseBody:   "",
+		DestinationURL: "",
+		Step:           "",
+		Level:          "",
+		Product:        "",
+		Application:    "",
+		Class:          "",
+		Method:         "",
+		Language:       "",
+		LogMessage:     "",
 	}
 }
 
@@ -55,14 +49,6 @@ func (lmlJSON *LogDetailsJSON) SetUUID(uuID string) {
 
 func (lmlJSON *LogDetailsJSON) SetIP(IP string) {
 	lmlJSON.IP = IP
-}
-
-func (lmlJSON *LogDetailsJSON) SetMembershipNumber(membershipNumber string) {
-	lmlJSON.MembershipNumber = membershipNumber
-}
-
-func (lmlJSON *LogDetailsJSON) SetChannel(channel string) {
-	lmlJSON.Channel = channel
 }
 
 func (lmlJSON *LogDetailsJSON) SetTimeStamp(timeStamp string) {
@@ -117,10 +103,6 @@ func (lmlJSON *LogDetailsJSON) SetLanguage(language string) {
 	lmlJSON.Language = language
 }
 
-func (lmlJSON *LogDetailsJSON) SetThread(threadID string) {
-	lmlJSON.Thread = threadID
-}
-
 func (lmlJSON *LogDetailsJSON) SetLogMessage(logMessage string) {
 	lmlJSON.LogMessage = logMessage
 }
@@ -132,16 +114,6 @@ func (lmlJSON *LogDetailsJSON) GetUUID() (uuID string) {
 
 func (lmlJSON *LogDetailsJSON) GetIP() (IP string) {
 	IP = lmlJSON.IP
-	return
-}
-
-func (lmlJSON *LogDetailsJSON) GetMembershipNumber() (membershipNumber string) {
-	membershipNumber = lmlJSON.MembershipNumber
-	return
-}
-
-func (lmlJSON *LogDetailsJSON) GetChannel() (channel string) {
-	channel = lmlJSON.Channel
 	return
 }
 
@@ -198,10 +170,6 @@ func (lmlJSON *LogDetailsJSON) GetMethod() (method string) {
 
 func (lmlJSON *LogDetailsJSON) GetLanguage() (language string) {
 	return lmlJSON.Language
-}
-
-func (lmlJSON *LogDetailsJSON) GetThread() (threadID string) {
-	return lmlJSON.Thread
 }
 
 func (lmlJSON *LogDetailsJSON) GetLogMessage() (logMessage string) {

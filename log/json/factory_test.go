@@ -2,10 +2,11 @@ package json
 
 import (
 	"context"
-	"git.lifemiles.net/lm-access/acc-gateway-svc/log"
-	"git.lifemiles.net/lm-go-libraries/lifemiles-go/configuration"
 	"github.com/google/uuid"
 	"io/ioutil"
+	"miltonnery/go_base/configuration"
+	viperConf "miltonnery/go_base/configuration/viper"
+	"miltonnery/go_base/log"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -21,12 +22,12 @@ func TestNewLifeMilesJSONLogFactory(t *testing.T) {
 	mockedConfiguration := makeMockedConfiguration()
 	fakeFactory := makeMockedNewLifeMilesJSONLogFactory(mockedConfiguration)
 	type args struct {
-		environment configuration.Config
+		environment configuration.Configuration
 	}
 	tests := []struct {
 		name string
 		args args
-		want *JSONLogFactory
+		want *LogFactory
 	}{
 		{
 			name: "Create new JSON log factory",
@@ -43,15 +44,15 @@ func TestNewLifeMilesJSONLogFactory(t *testing.T) {
 	}
 }
 
-func makeMockedConfiguration() (environment configuration.Config) {
-	environment = configuration.GetInstance(
-		configuration.NewSetting("./../../", "application-test", "yaml", false))
+func makeMockedConfiguration() (environment configuration.Configuration) {
+	setting := viperConf.NewSettingWithSamePath("./../../")
+	environment = viperConf.NewConfiguration(setting)
 	return
 }
 
-func makeMockedNewLifeMilesJSONLogFactory(environment configuration.Config) *JSONLogFactory {
-	return &JSONLogFactory{
-		environment: environment,
+func makeMockedNewLifeMilesJSONLogFactory(configuration configuration.Configuration) *LogFactory {
+	return &LogFactory{
+		configuration: configuration,
 	}
 }
 
@@ -67,7 +68,7 @@ func TestLifeMilesJSONLogFactory_Create(t *testing.T) {
 	mockedLog := makeMockedLog(mockedConfiguration, mockedRequest, step, level, message)
 
 	type fields struct {
-		environment configuration.Config
+		configuration configuration.Configuration
 	}
 	type args struct {
 		request  *http.Request
@@ -80,7 +81,7 @@ func TestLifeMilesJSONLogFactory_Create(t *testing.T) {
 		name   string
 		fields fields
 		args   args
-		want   log.LifeMilesLogDetail
+		want   log.Detail
 	}{
 		{
 			name:   "Create a new JSON log",
@@ -97,8 +98,8 @@ func TestLifeMilesJSONLogFactory_Create(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			lmf := JSONLogFactory{
-				environment: tt.fields.environment,
+			lmf := LogFactory{
+				configuration: tt.fields.configuration,
 			}
 			if got := lmf.Create(tt.args.request, tt.args.response, tt.args.step, tt.args.level, tt.args.message); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Create() = %v, want %v", got, tt.want)
@@ -107,7 +108,7 @@ func TestLifeMilesJSONLogFactory_Create(t *testing.T) {
 	}
 }
 
-func makeMockedLog(environment configuration.Config, request *http.Request, step, level, message string) *LogDetailsJSON {
+func makeMockedLog(environment configuration.Configuration, request *http.Request, step, level, message string) *LogDetailsJSON {
 	//Log data verification --------------------------------------------------------------------------------------------/
 	//Filling nil values for avoiding errors during runtime
 	if request == nil {
@@ -137,8 +138,6 @@ func makeMockedLog(environment configuration.Config, request *http.Request, step
 	lmlJSON := NewLifeMilesLogDetailsJSON()
 	lmlJSON.SetUUID(requestUUID)
 	lmlJSON.SetIP(request.RemoteAddr)
-	lmlJSON.SetMembershipNumber(environment.GetString("log.values.not-available"))
-	lmlJSON.SetChannel(environment.GetString("log.values.channel"))
 	lmlJSON.SetTimeStamp(timestamp)
 	lmlJSON.SetServiceName(environment.GetString("log.values.service-name"))
 	lmlJSON.SetHostname(hostName)
@@ -152,7 +151,6 @@ func makeMockedLog(environment configuration.Config, request *http.Request, step
 	lmlJSON.SetClass(class)
 	lmlJSON.SetMethod(class)
 	lmlJSON.SetLanguage(environment.GetString("log.values.language"))
-	lmlJSON.SetThread(environment.GetString("log.values.thread"))
 	lmlJSON.SetLogMessage(message)
 
 	return lmlJSON
