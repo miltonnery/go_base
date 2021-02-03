@@ -2,12 +2,12 @@ package service
 
 import (
 	"miltonnery/go_base/configuration"
-	"miltonnery/go_base/dto/service"
+	"miltonnery/go_base/dto"
 	"miltonnery/go_base/log"
 )
 
 type Service interface {
-	Execute(serviceRequest *service.Request) (serviceResponse *service.Response, err error)
+	Execute(serviceRequest *dto.Request) (serviceResponse *dto.Response, err error)
 }
 
 // SERVICE INTERFACE IMPLEMENTATION ------------------------------------------------------------------------------------/
@@ -24,8 +24,11 @@ func NewImpl(configuration configuration.Configuration, logger log.SeriviceLog) 
 	}
 }
 
-func (i Impl) Execute(serviceRequest *service.Request) (serviceResponse *service.Response, err error) {
-	panic("implement me")
+func (i Impl) Execute(serviceRequest *dto.Request) (serviceResponse *dto.Response, err error) {
+	i.logger.InfoLite("Service", "Starting the service layer")
+	serviceResponse = &dto.Response{Output: serviceRequest.FirstAttribute}
+	//err = errorHandling.NewInternalError(errorHandling.BasicEmptyParameter)
+	return
 }
 
 // Auxiliary functions -------------------------------------------------------------------------------------------------/

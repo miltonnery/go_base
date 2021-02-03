@@ -37,8 +37,8 @@ func TestNewLifeMilesJSONLogFactory(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := NewLifeMilesJSONLogFactory(tt.args.environment); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("NewLifeMilesJSONLogFactory() = %v, want %v", got, tt.want)
+			if got := NewLogFactory(tt.args.environment); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("NewLogFactory() = %v, want %v", got, tt.want)
 			}
 		})
 	}

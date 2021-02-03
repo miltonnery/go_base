@@ -1,8 +1,8 @@
 package json
 
 import (
-	"git.lifemiles.net/lm-go-libraries/lifemiles-go/configuration"
 	"go.uber.org/zap"
+	"miltonnery/go_base/configuration"
 	"miltonnery/go_base/log"
 	"net/http"
 	"strings"
@@ -11,9 +11,9 @@ import (
 // SERVICE LOG IMPLEMENTATION FOR JSON
 
 type ServiceLogJSON struct {
-	environment configuration.Config
+	environment configuration.Configuration
 	factory     log.LogFactory
-	zapLogger   zap.SugaredLogger
+	zapLogger   *zap.SugaredLogger
 }
 
 //Constant definition
@@ -26,9 +26,9 @@ const (
 )
 
 func NewServiceLogJSON(
-	environment configuration.Config,
+	environment configuration.Configuration,
 	factory log.LogFactory,
-	loggerJSON zap.SugaredLogger) *ServiceLogJSON {
+	loggerJSON *zap.SugaredLogger) *ServiceLogJSON {
 	return &ServiceLogJSON{
 		environment: environment,
 		factory:     factory,

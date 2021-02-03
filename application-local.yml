@@ -1,11 +1,37 @@
+error-mapping:
+  path: "."
+  filename: application-local
 
-
-
+log:
+  startup-phrase:
+    title:
+      value: . ACCESS GATEWAY SERVICE .
+      font: digital
+    message:
+      value: . GOPHER-GUARD-SVC 2 .
+      font: digital
+  logging-level: "DEBUG"
+  values:
+    product: "lm-access"
+    application: "Go base"
+    service-name: "go_base"
+    channel: "TBD"
+    language: "Go"
+    thread: "N/A"
+    log-level:
+      debug: "DEBUG"
+      informative: "INFO"
+      warning: "WARNING"
+      error: "ERROR"
+      fatal: "FATAL"
 
 error-map:
   - internal-code: 10
     external-http-status: 500
     external-message: "Internal Server Error"
+  - internal-code: 30
+    external-http-status: 400
+    external-message: "The parameter provided is empty"
   - internal-code: 62
     external-http-status: 400
     external-message: "Bad Request"

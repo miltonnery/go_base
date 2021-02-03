@@ -16,7 +16,7 @@ type LogFactory struct {
 	configuration configuration.Configuration
 }
 
-func NewLifeMilesJSONLogFactory(configuration configuration.Configuration) *LogFactory {
+func NewLogFactory(configuration configuration.Configuration) *LogFactory {
 	return &LogFactory{
 		configuration: configuration,
 	}

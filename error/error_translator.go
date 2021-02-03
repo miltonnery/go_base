@@ -1,8 +1,8 @@
 package errorhandling
 
 import (
-	"git.lifemiles.net/lm-go-libraries/lifemiles-go/configuration"
 	"github.com/spf13/viper"
+	"miltonnery/go_base/configuration"
 	"net/http"
 )
 
@@ -40,7 +40,7 @@ func NewErrorMatcher() *ErrorMatcher {
 	return &ErrorMatcher{matchCatalog}
 }
 
-func (em ErrorMatcher) LoadErrorMatchingCatalogFromConfiguration(config configuration.Config) (err error) {
+func (em ErrorMatcher) LoadErrorMatchingCatalogFromConfiguration(config configuration.Configuration) (err error) {
 	v := viper.New()
 	v.SetConfigType("yaml")
 	v.AddConfigPath(config.GetString("error-mapping.path"))
