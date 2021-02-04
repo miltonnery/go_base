@@ -13,7 +13,7 @@ import (
 type ServiceLogJSON struct {
 	environment configuration.Configuration
 	factory     log.LogFactory
-	zapLogger   *zap.SugaredLogger
+	zapLogger   *zap.Logger
 }
 
 //Constant definition
@@ -28,7 +28,7 @@ const (
 func NewServiceLogJSON(
 	environment configuration.Configuration,
 	factory log.LogFactory,
-	loggerJSON *zap.SugaredLogger) *ServiceLogJSON {
+	loggerJSON *zap.Logger) *ServiceLogJSON {
 	return &ServiceLogJSON{
 		environment: environment,
 		factory:     factory,
@@ -40,8 +40,9 @@ func (sLJSON ServiceLogJSON) Debug(request *http.Request, response *http.Respons
 	loggingLevel := sLJSON.environment.GetString("log.logging-level")
 	if sLJSON.checkLoggingLevel(loggingLevel, debug) {
 		levelInfo := sLJSON.environment.GetString("log.values.log-level.debug")
-		log := sLJSON.factory.Create(request, response, step, levelInfo, message)
-		sLJSON.zapLogger.Debug(log.GetLogMessage(), "LM_LOG", log)
+		logJSON := sLJSON.factory.Create(request, response, step, levelInfo, message)
+		zapFields := parseLogToZapFields(logJSON)
+		sLJSON.zapLogger.Debug("", zapFields...)
 	}
 }
 
@@ -49,8 +50,9 @@ func (sLJSON ServiceLogJSON) Info(request *http.Request, response *http.Response
 	loggingLevel := sLJSON.environment.GetString("log.logging-level")
 	if sLJSON.checkLoggingLevel(loggingLevel, info) {
 		levelInfo := sLJSON.environment.GetString("log.values.log-level.informative")
-		log := sLJSON.factory.Create(request, response, step, levelInfo, message)
-		sLJSON.zapLogger.Info(log.GetLogMessage(), "LM_LOG", log)
+		logJSON := sLJSON.factory.Create(request, response, step, levelInfo, message)
+		zapFields := parseLogToZapFields(logJSON)
+		sLJSON.zapLogger.Info("", zapFields...)
 	}
 }
 
@@ -58,8 +60,9 @@ func (sLJSON ServiceLogJSON) Warn(request *http.Request, response *http.Response
 	loggingLevel := sLJSON.environment.GetString("log.logging-level")
 	if sLJSON.checkLoggingLevel(loggingLevel, warn) {
 		levelInfo := sLJSON.environment.GetString("log.values.log-level.warning")
-		log := sLJSON.factory.Create(request, response, step, levelInfo, message)
-		sLJSON.zapLogger.Warn(log.GetLogMessage(), "LM_LOG", log)
+		logJSON := sLJSON.factory.Create(request, response, step, levelInfo, message)
+		zapFields := parseLogToZapFields(logJSON)
+		sLJSON.zapLogger.Warn("", zapFields...)
 	}
 }
 
@@ -67,8 +70,9 @@ func (sLJSON ServiceLogJSON) Error(request *http.Request, response *http.Respons
 	loggingLevel := sLJSON.environment.GetString("log.logging-level")
 	if sLJSON.checkLoggingLevel(loggingLevel, error) {
 		levelInfo := sLJSON.environment.GetString("log.values.log-level.error")
-		log := sLJSON.factory.Create(request, response, step, levelInfo, message)
-		sLJSON.zapLogger.Error(log.GetLogMessage(), "LM_LOG", log)
+		logJSON := sLJSON.factory.Create(request, response, step, levelInfo, message)
+		zapFields := parseLogToZapFields(logJSON)
+		sLJSON.zapLogger.Error("", zapFields...)
 	}
 }
 
@@ -76,8 +80,9 @@ func (sLJSON ServiceLogJSON) Fatal(request *http.Request, response *http.Respons
 	loggingLevel := sLJSON.environment.GetString("log.logging-level")
 	if sLJSON.checkLoggingLevel(loggingLevel, fatal) {
 		levelInfo := sLJSON.environment.GetString("log.values.log-level.fatal")
-		log := sLJSON.factory.Create(request, response, step, levelInfo, message)
-		sLJSON.zapLogger.Error(log.GetLogMessage(), "LM_LOG", log)
+		logJSON := sLJSON.factory.Create(request, response, step, levelInfo, message)
+		zapFields := parseLogToZapFields(logJSON)
+		sLJSON.zapLogger.Error("", zapFields...)
 	}
 }
 
@@ -86,8 +91,9 @@ func (sLJSON ServiceLogJSON) DebugLite(step string, message string) {
 	loggingLevel := sLJSON.environment.GetString("log.logging-level")
 	if sLJSON.checkLoggingLevel(loggingLevel, debug) {
 		levelInfo := sLJSON.environment.GetString("log.values.log-level.debug")
-		log := sLJSON.factory.CreateLite(step, levelInfo, message)
-		sLJSON.zapLogger.Debug(log.GetLogMessage(), "LM_LOG", log)
+		logJSON := sLJSON.factory.CreateLite(step, levelInfo, message)
+		zapFields := parseLogToZapFields(logJSON)
+		sLJSON.zapLogger.Debug("", zapFields...)
 	}
 }
 
@@ -95,8 +101,9 @@ func (sLJSON ServiceLogJSON) InfoLite(step string, message string) {
 	loggingLevel := sLJSON.environment.GetString("log.logging-level")
 	if sLJSON.checkLoggingLevel(loggingLevel, info) {
 		levelInfo := sLJSON.environment.GetString("log.values.log-level.informative")
-		log := sLJSON.factory.CreateLite(step, levelInfo, message)
-		sLJSON.zapLogger.Info(log.GetLogMessage(), "LM_LOG", log)
+		logJSON := sLJSON.factory.CreateLite(step, levelInfo, message)
+		zapFields := parseLogToZapFields(logJSON)
+		sLJSON.zapLogger.Info("", zapFields...)
 	}
 }
 
@@ -104,8 +111,9 @@ func (sLJSON ServiceLogJSON) WarnLite(step string, message string) {
 	loggingLevel := sLJSON.environment.GetString("log.logging-level")
 	if sLJSON.checkLoggingLevel(loggingLevel, warn) {
 		levelInfo := sLJSON.environment.GetString("log.values.log-level.warning")
-		log := sLJSON.factory.CreateLite(step, levelInfo, message)
-		sLJSON.zapLogger.Warn(log.GetLogMessage(), "LM_LOG", log)
+		logJSON := sLJSON.factory.CreateLite(step, levelInfo, message)
+		zapFields := parseLogToZapFields(logJSON)
+		sLJSON.zapLogger.Warn("", zapFields...)
 	}
 }
 
@@ -113,8 +121,9 @@ func (sLJSON ServiceLogJSON) ErrorLite(step string, message string) {
 	loggingLevel := sLJSON.environment.GetString("log.logging-level")
 	if sLJSON.checkLoggingLevel(loggingLevel, error) {
 		levelInfo := sLJSON.environment.GetString("log.values.log-level.error")
-		log := sLJSON.factory.CreateLite(step, levelInfo, message)
-		sLJSON.zapLogger.Error(log.GetLogMessage(), "LM_LOG", log)
+		logJSON := sLJSON.factory.CreateLite(step, levelInfo, message)
+		zapFields := parseLogToZapFields(logJSON)
+		sLJSON.zapLogger.Error("", zapFields...)
 	}
 }
 
@@ -122,8 +131,9 @@ func (sLJSON ServiceLogJSON) FatalLite(step string, message string) {
 	loggingLevel := sLJSON.environment.GetString("log.logging-level")
 	if sLJSON.checkLoggingLevel(loggingLevel, fatal) {
 		levelInfo := sLJSON.environment.GetString("log.values.log-level.fatal")
-		log := sLJSON.factory.CreateLite(step, levelInfo, message)
-		sLJSON.zapLogger.Error(log.GetLogMessage(), "LM_LOG", log)
+		logJSON := sLJSON.factory.CreateLite(step, levelInfo, message)
+		zapFields := parseLogToZapFields(logJSON)
+		sLJSON.zapLogger.Error("", zapFields...)
 	}
 }
 
@@ -181,6 +191,22 @@ func (sLJSON ServiceLogJSON) checkLoggingLevel(loggingLevel string, loggingType 
 		}
 
 	}
+
+	return
+}
+
+func parseLogToZapFields(logJSON log.Detail) (fields []zap.Field) {
+	fields = append(fields, zap.String("level", logJSON.GetLevel()))
+	fields = append(fields, zap.String("time", logJSON.GetTimeStamp()))
+	fields = append(fields, zap.String("service-name", logJSON.GetServiceName()))
+	fields = append(fields, zap.String("host", logJSON.GetHostname()))
+	fields = append(fields, zap.String("ip", logJSON.GetIP()))
+	fields = append(fields, zap.String("uuid", logJSON.GetUUID()))
+	fields = append(fields, zap.String("step", logJSON.GetStep()))
+	fields = append(fields, zap.String("message", logJSON.GetLogMessage()))
+	fields = append(fields, zap.String("line", logJSON.GetMethod()))
+	fields = append(fields, zap.String("request", logJSON.GetRequestBody()))
+	fields = append(fields, zap.String("response", logJSON.GetResponseBody()))
 
 	return
 }
