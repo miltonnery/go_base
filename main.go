@@ -41,10 +41,10 @@ func main() {
 	endpoint := service.Endpoints{
 		Service: service.NewServiceEndpoint(middleware),
 	}
-	//Se crea el servidor
+	//Creating the server
 	mux := http.NewServeMux()
 
-	//Se crea el handler para health check
+	//Setting the health check
 	handler := health.NewHandler()
 	//handler.AddChecker("Repository checker", SET_REPO_IMPL_HERE)
 
@@ -52,7 +52,7 @@ func main() {
 	errorMatcher.LoadErrorMatchingCatalogFromConfiguration(configuration)
 	errEncDec := service.NewErrorDecoderEncoder(errorMatcher)
 
-	//Se agregan los endpoint
+	//Setting endpoints
 	mux.Handle("/health", handler)
 	mux.Handle("/path/to-endpoint", service.NewHTTPHandler(endpoint, errEncDec))
 
