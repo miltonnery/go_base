@@ -53,8 +53,8 @@ func Test_errorMatcher_GetHttpCodeFromInternalError(t *testing.T) {
 			args:   args{internalError: NewInternalError(GenericUnknownError)},
 			wantErrorMatch: ErrorMappingRule{
 				InternalCode:       GenericUnknownError,
-				ExternalHTTPStatus: http.StatusBadRequest,
-				ExternalMessage:    http.StatusText(http.StatusBadRequest)},
+				ExternalHTTPStatus: http.StatusInternalServerError,
+				ExternalMessage:    http.StatusText(http.StatusInternalServerError)},
 		},
 		{
 			name:   "Get inexistent HTTP Code from internal error",
@@ -80,6 +80,30 @@ func Test_errorMatcher_GetHttpCodeFromInternalError(t *testing.T) {
 
 func mockedErrorMatcher() *ErrorMatcher {
 	return &ErrorMatcher{matchCatalog: mockedErrorMatchingCatalog()}
+}
+
+func mockedGoodErrorMatchingCatalog() (matchCatalog map[int]ErrorMappingRule) {
+	iem1 := &ErrorMappingRule{
+		InternalCode:       PersistenceConnectionLost,
+		ExternalHTTPStatus: http.StatusInternalServerError,
+		ExternalMessage:    http.StatusText(http.StatusInternalServerError)}
+
+	iem2 := &ErrorMappingRule{
+		InternalCode:       GenericUnknownError,
+		ExternalHTTPStatus: http.StatusInternalServerError,
+		ExternalMessage:    http.StatusText(http.StatusInternalServerError)}
+
+	iem3 := &ErrorMappingRule{
+		InternalCode:       GenericBusinessTestError,
+		ExternalHTTPStatus: http.StatusBadRequest,
+		ExternalMessage:    http.StatusText(http.StatusBadRequest)}
+
+	matchCatalog = make(map[int]ErrorMappingRule)
+	matchCatalog[iem1.InternalCode] = *iem1
+	matchCatalog[iem2.InternalCode] = *iem2
+	matchCatalog[iem3.InternalCode] = *iem3
+
+	return
 }
 
 func mockedErrorMatchingCatalog() (matchCatalog map[int]ErrorMappingRule) {
@@ -109,9 +133,9 @@ func mockedErrorMatchingCatalog() (matchCatalog map[int]ErrorMappingRule) {
 // ---------------------------------------------------------------------------------------------------------------------
 
 func Test_errorMatcher_LoadErrorMatchingCatalogFromConfiguration(t *testing.T) {
-	mockedGoodConfiguration := fakeMockedConfiguration()
+	mockedGoodConfiguration := fakeGoodMockedConfiguration()
 	mockedBadConfiguration := fakeBadMockedConfiguration(mockedGoodConfiguration)
-	memc := mockedErrorMatchingCatalog()
+	mgemc := mockedGoodErrorMatchingCatalog()
 	type fields struct {
 		matchCatalog map[int]ErrorMappingRule
 	}
@@ -126,7 +150,7 @@ func Test_errorMatcher_LoadErrorMatchingCatalogFromConfiguration(t *testing.T) {
 	}{
 		{
 			name:    "Load GOOD error matching catalog from config",
-			fields:  fields{matchCatalog: memc},
+			fields:  fields{matchCatalog: mgemc},
 			args:    args{config: mockedGoodConfiguration},
 			wantErr: false,
 		},
@@ -134,9 +158,9 @@ func Test_errorMatcher_LoadErrorMatchingCatalogFromConfiguration(t *testing.T) {
 			//NOTE:
 			//This test is currently twaked to pass.
 			//The solution is to get rid of the singleton patten implementation for the configuration variable
-			//which can take a lot of redefinition time spent into the LM properties package.
+			//which can take a lot of redefinition time spent into the properties package.
 			name:    "Load BAD error matching catalog from config",
-			fields:  fields{matchCatalog: memc},
+			fields:  fields{matchCatalog: mgemc},
 			args:    args{config: mockedBadConfiguration},
 			wantErr: false,
 		},
@@ -162,7 +186,7 @@ func Test_errorMatcher_LoadErrorMatchingCatalogFromConfiguration(t *testing.T) {
 	}
 }
 
-func fakeMockedConfiguration() (environment configuration.Config) {
+func fakeGoodMockedConfiguration() (environment configuration.Config) {
 	return configuration.GetInstance(
 		configuration.NewSetting("../error/test-files/good-files", "application", "yaml", false))
 }

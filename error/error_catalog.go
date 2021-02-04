@@ -61,6 +61,7 @@ const (
 
 	// BUSINESS ERRORS -------------------------------------------------------------------------------------------------|
 
+	GenericBusinessTestError = 552
 )
 
 // INTERNAL ERROR DESCRIPTIONS
@@ -96,9 +97,7 @@ var statusText = map[int]string{
 	GenericUnknownError: "generic-errors: unknown error",
 
 	// Business Errors -------------------------------------------------------------------------------------------------|
-
-	// Amadeus
-
+	GenericBusinessTestError: "generic-business: generic business test error",
 }
 
 // ErrorDescription returns a text for the HTTP status code. It returns the empty
