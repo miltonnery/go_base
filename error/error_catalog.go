@@ -61,6 +61,10 @@ const (
 
 	// BUSINESS ERRORS -------------------------------------------------------------------------------------------------|
 
+	//Field
+	FieldMissing      = 500
+	FieldDoesNotMatch = 501
+
 	GenericBusinessTestError = 552
 )
 
@@ -97,6 +101,8 @@ var statusText = map[int]string{
 	GenericUnknownError: "generic-errors: unknown error",
 
 	// Business Errors -------------------------------------------------------------------------------------------------|
+	FieldMissing:             "field: missing field",
+	FieldDoesNotMatch:        "field: the field does not match",
 	GenericBusinessTestError: "generic-business: generic business test error",
 }
 
