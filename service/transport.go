@@ -20,15 +20,6 @@ func NewErrorDecoderEncoder(errorMatcher *errorHandling.ErrorMatcher) (eed *Erro
 	return &ErrorDecoderEncoder{errorMatcher: errorMatcher}
 }
 
-// @Summary New HTTP handler
-// @Description Lifemiles Middleware Retrieve PNR Service
-// @Tags Go microservice
-// @Accept  json
-// @Produce  json
-// @Param GetBalanceRequest body GetBalanceRequest true "Balance Request"
-// @Success 200 {object} RetrievePNRResponse
-// @Failure 500 {object} RetrievePNRResponse
-// @Router /path/to-endpoint [post]
 func NewHTTPHandler(endpoints Endpoints, eed *ErrorDecoderEncoder) http.Handler {
 	serviceHandler := httpTransport.NewServer(
 		endpoints.Service,
@@ -72,5 +63,5 @@ func encodeError(_ context.Context, err error, w http.ResponseWriter, matcher *e
 		w.WriteHeader(em.GetExternalHTTPError())
 		return json.NewEncoder(w).Encode(dto.ErrorResponse{Description: em.GetExternalMessage()})
 	}
-	return nil //TODO: Validate this
+	return nil
 }

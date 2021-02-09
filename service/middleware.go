@@ -1,6 +1,7 @@
 package service
 
 import (
+	"context"
 	"miltonnery/go_base/configuration"
 	"miltonnery/go_base/dto"
 	"miltonnery/go_base/log"
@@ -22,6 +23,9 @@ func NewMiddlewareImpl(configuration configuration.Configuration, logger log.Ser
 }
 
 func (m middlewareImpl) Execute(serviceRequest *dto.Request) (serviceResponse *dto.Response, err error) {
+
+	ctx := context.Background()
+	log.FillContextForLogs(ctx)
 	m.logger.InfoLite("Middleware", "Beginning of middleware layer")
 
 	//Request validation

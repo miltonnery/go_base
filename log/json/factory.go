@@ -106,6 +106,8 @@ func (jlf LogFactory) CreateLite(step string, level string, message string) log.
 	lmlJSON := NewLogDetailsJSON()
 	lmlJSON.SetTimeStamp(timestamp)
 	lmlJSON.SetServiceName(jlf.configuration.GetString("log.values.service-name"))
+	lmlJSON.SetUUID("N/A")
+	lmlJSON.SetIP("N/A")
 	lmlJSON.SetHostname(hostName)
 	lmlJSON.SetStep(step)
 	lmlJSON.SetLevel(level)
