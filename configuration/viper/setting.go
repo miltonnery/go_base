@@ -20,17 +20,17 @@ type ConfigSetting struct {
 	basePath        string
 	environmentPath string
 	name            string
-	ftype           string
+	fileType        string
 	withVault       bool
 }
 
-func NewSetting(basePath, environmentPath, name, ftype string, withVault bool) *ConfigSetting {
+func NewSetting(basePath, environmentPath, fileName, fileType string, withVault bool) *ConfigSetting {
 
 	s := ConfigSetting{
 		basePath:        basePath,
 		environmentPath: environmentPath,
-		name:            name,
-		ftype:           ftype,
+		name:            fileName,
+		fileType:        fileType,
 		withVault:       withVault,
 	}
 	s.CheckDefault()
@@ -74,8 +74,8 @@ func (s *ConfigSetting) CheckDefault() {
 		s.name = FileName
 	}
 
-	if s.ftype == "" {
-		s.ftype = FileType
+	if s.fileType == "" {
+		s.fileType = FileType
 	}
 }
 
@@ -92,7 +92,7 @@ func (s *ConfigSetting) GetName() string {
 }
 
 func (s *ConfigSetting) GetType() string {
-	return s.ftype
+	return s.fileType
 }
 
 func (s *ConfigSetting) WithVault() bool {
