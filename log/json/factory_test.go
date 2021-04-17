@@ -3,10 +3,10 @@ package json
 import (
 	"context"
 	"github.com/google/uuid"
+	"github.com/miltonnery/go_base/configuration"
+	viperConf "github.com/miltonnery/go_base/configuration/viper"
+	"github.com/miltonnery/go_base/log"
 	"io/ioutil"
-	"miltonnery/go_base/configuration"
-	viperConf "miltonnery/go_base/configuration/viper"
-	"miltonnery/go_base/log"
 	"net/http"
 	"net/http/httptest"
 	"os"
