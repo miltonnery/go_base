@@ -1,9 +1,9 @@
 package json
 
 import (
+	"github.com/miltonnery/go_base/configuration"
+	"github.com/miltonnery/go_base/log"
 	"go.uber.org/zap"
-	"miltonnery/go_base/configuration"
-	"miltonnery/go_base/log"
 	"net/http"
 	"strings"
 )

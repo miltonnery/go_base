@@ -5,8 +5,8 @@ import (
 	"encoding/json"
 	httpTransport "github.com/go-kit/kit/transport/http"
 	"github.com/gorilla/mux"
-	"miltonnery/go_base/dto"
-	errorHandling "miltonnery/go_base/error"
+	"github.com/miltonnery/go_base/dto"
+	errorHandling "github.com/miltonnery/go_base/error"
 	"net/http"
 )
 

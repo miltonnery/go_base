@@ -1,7 +1,8 @@
 package errorhandling
 
 import (
-	"git.lifemiles.net/lm-go-libraries/lifemiles-go/configuration"
+	"github.com/miltonnery/go_base/configuration"
+	"github.com/miltonnery/go_base/configuration/viper"
 	"net/http"
 	"reflect"
 	"testing"
@@ -140,7 +141,7 @@ func Test_errorMatcher_LoadErrorMatchingCatalogFromConfiguration(t *testing.T) {
 		matchCatalog map[int]ErrorMappingRule
 	}
 	type args struct {
-		config configuration.Config
+		config configuration.Configuration
 	}
 	tests := []struct {
 		name    string
@@ -186,12 +187,13 @@ func Test_errorMatcher_LoadErrorMatchingCatalogFromConfiguration(t *testing.T) {
 	}
 }
 
-func fakeGoodMockedConfiguration() (environment configuration.Config) {
-	return configuration.GetInstance(
-		configuration.NewSetting("../error/test-files/good-files", "application", "yaml", false))
+func fakeGoodMockedConfiguration() (environment configuration.Configuration) {
+	setting := viper.NewSettingWithSamePath("./test-files/good-files")
+	config := viper.NewConfiguration(setting)
+	return config
 }
 
-func fakeBadMockedConfiguration(environment configuration.Config) configuration.Config {
+func fakeBadMockedConfiguration(environment configuration.Configuration) configuration.Configuration {
 	environment.Set("error-mapping.path", "./test-files/bad-files")
 	return environment
 }
