@@ -94,6 +94,10 @@ func (s *ConfigSetting) GetActiveEnvironment() string {
 	return s.activeEnvironment
 }
 
+func (s *ConfigSetting) SetActiveEnvironment(activeEnvironment string) {
+	s.activeEnvironment = activeEnvironment
+}
+
 func (s *ConfigSetting) GetName() string {
 	return s.fileName
 }
