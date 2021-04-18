@@ -2,10 +2,10 @@ package service
 
 import (
 	"context"
-	"miltonnery/go_base/configuration"
-	"miltonnery/go_base/dto"
-	"miltonnery/go_base/log"
-	"miltonnery/go_base/validator"
+	"github.com/miltonnery/go_base/configuration"
+	"github.com/miltonnery/go_base/dto"
+	"github.com/miltonnery/go_base/log"
+	"github.com/miltonnery/go_base/validator"
 )
 
 type middlewareImpl struct {

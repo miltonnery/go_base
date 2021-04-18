@@ -3,10 +3,10 @@ package json
 import (
 	"context"
 	"github.com/google/uuid"
+	"github.com/miltonnery/go_base/configuration"
+	viperConf "github.com/miltonnery/go_base/configuration/viper"
+	"github.com/miltonnery/go_base/log"
 	"io/ioutil"
-	"miltonnery/go_base/configuration"
-	viperConf "miltonnery/go_base/configuration/viper"
-	"miltonnery/go_base/log"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -18,6 +18,7 @@ import (
 )
 
 // ---------------------------------------------------------------------------------------------------------------------/
+
 func TestNewLifeMilesJSONLogFactory(t *testing.T) {
 	mockedConfiguration := makeMockedConfiguration()
 	fakeFactory := makeMockedNewJSONLogFactory(mockedConfiguration)
@@ -46,6 +47,7 @@ func TestNewLifeMilesJSONLogFactory(t *testing.T) {
 
 func makeMockedConfiguration() (environment configuration.Configuration) {
 	setting := viperConf.NewSettingWithSamePath("./../../")
+	setting.SetActiveEnvironment("test")
 	environment = viperConf.NewConfiguration(setting)
 	return
 }
@@ -169,4 +171,81 @@ func makeMockedRequest() *http.Request {
 	request = request.WithContext(cwv)
 
 	return request
+}
+
+// ---------------------------------------------------------------------------------------------------------------------/
+
+func TestLogFactory_CreateLite(t *testing.T) {
+	mockedConfiguration := makeMockedConfiguration()
+	step := "TEST STEP"
+	level := "TEST LEVEL"
+	message := "TEST MESSAGE"
+
+	mockedLogLite := makeMockedLogLite(mockedConfiguration, step, level, message)
+
+	type fields struct {
+		configuration configuration.Configuration
+	}
+	type args struct {
+		step    string
+		level   string
+		message string
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   log.Detail
+	}{
+		{
+			name:   "Create a new JSON log Lite",
+			fields: fields{configuration: mockedConfiguration},
+			args: args{
+				step:    step,
+				level:   level,
+				message: message,
+			},
+			want: mockedLogLite,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			jlf := LogFactory{
+				configuration: tt.fields.configuration,
+			}
+			if got := jlf.CreateLite(tt.args.step, tt.args.level, tt.args.message); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("CreateLite() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func makeMockedLogLite(environment configuration.Configuration, step, level, message string) *LogDetailsJSON {
+	//Log data verification --------------------------------------------------------------------------------------------/
+	//Filling nil values for avoiding errors during runtime
+
+	timestamp := time.Now().UTC().Format(time.Stamp)
+	hostName, _ := os.Hostname()
+
+	_, file, line, _ := runtime.Caller(2)
+	lineString := strconv.Itoa(line)
+	class := file + ":" + lineString
+
+	//Log data filling -------------------------------------------------------------------------------------------------/
+	lmlJSON := NewLogDetailsJSON()
+	lmlJSON.SetUUID("N/A")
+	lmlJSON.SetIP("N/A")
+	lmlJSON.SetTimeStamp(timestamp)
+	lmlJSON.SetServiceName(environment.GetString("log.values.service-name"))
+	lmlJSON.SetHostname(hostName)
+	lmlJSON.SetStep(step)
+	lmlJSON.SetLevel(level)
+	lmlJSON.SetProduct(environment.GetString("log.values.product"))
+	lmlJSON.SetApplication(environment.GetString("log.values.application"))
+	lmlJSON.SetClass(class)
+	lmlJSON.SetMethod(class)
+	lmlJSON.SetLanguage(environment.GetString("log.values.language"))
+	lmlJSON.SetLogMessage(message)
+
+	return lmlJSON
 }

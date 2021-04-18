@@ -1,7 +1,7 @@
 package json
 
 import (
-	"miltonnery/go_base/log"
+	"github.com/miltonnery/go_base/log"
 	"reflect"
 	"testing"
 	"time"

@@ -1,8 +1,8 @@
 package json
 
 import (
-	"miltonnery/go_base/configuration"
-	"miltonnery/go_base/log"
+	"github.com/miltonnery/go_base/configuration"
+	"github.com/miltonnery/go_base/log"
 	"net/http"
 	"net/http/httptest"
 	"os"

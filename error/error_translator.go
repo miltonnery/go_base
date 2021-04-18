@@ -1,8 +1,8 @@
 package errorhandling
 
 import (
+	"github.com/miltonnery/go_base/configuration"
 	"github.com/spf13/viper"
-	"miltonnery/go_base/configuration"
 	"net/http"
 )
 

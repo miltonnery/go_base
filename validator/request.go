@@ -1,8 +1,8 @@
 package validator
 
 import (
-	"miltonnery/go_base/dto"
-	errorHandling "miltonnery/go_base/error"
+	"github.com/miltonnery/go_base/dto"
+	errorHandling "github.com/miltonnery/go_base/error"
 	"strings"
 )
 

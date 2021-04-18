@@ -3,7 +3,7 @@ package service
 import (
 	"context"
 	"github.com/go-kit/kit/endpoint"
-	"miltonnery/go_base/dto"
+	"github.com/miltonnery/go_base/dto"
 )
 
 func NewServiceEndpoint(s Service) endpoint.Endpoint {
