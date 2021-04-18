@@ -13,7 +13,7 @@ import (
 const (
 	// Base path is defined as default
 	EnvFlag      = "active_env"
-	DefaultEnv   = "local"
+	DefaultEnv   = "default_env"
 	BasePathFlag = "base_path"
 	EnvPathFlag  = "env_path"
 )
@@ -79,22 +79,22 @@ func (vc *viperConfiguration) GetBool(key string) bool {
 
 // ToInt casts an interface to an int type.
 func (vc *viperConfiguration) GetInt(key string) int {
-	return vc.GetInt(key)
+	return vc.viper.GetInt(key)
 }
 
 // ToInt32 casts an interface to an int32 type.
 func (vc *viperConfiguration) GetInt32(key string) int32 {
-	return vc.GetInt32(key)
+	return vc.viper.GetInt32(key)
 }
 
 // ToInt64 casts an interface to an int64 type
 func (vc *viperConfiguration) GetInt64(key string) int64 {
-	return vc.GetInt64(key)
+	return vc.viper.GetInt64(key)
 }
 
 // ToFloat64 casts an interface to a float64 type.
 func (vc *viperConfiguration) GetFloat64(key string) float64 {
-	return vc.GetFloat64(key)
+	return vc.viper.GetFloat64(key)
 }
 
 // ToTime casts an interface to a time.Time type.
@@ -104,7 +104,7 @@ func (vc *viperConfiguration) GetTime(key string) time.Time {
 
 // ToDuration casts an interface to a time.Duration type.
 func (vc *viperConfiguration) GetDuration(key string) time.Duration {
-	return vc.GetDuration(key)
+	return vc.viper.GetDuration(key)
 }
 
 // ToStringMapString casts an interface to a map[string]string type.
@@ -147,7 +147,7 @@ func (vc *viperConfiguration) readConfig() {
 // readFlags() sets the configuration flags for configuring viper
 func readFlags(setting Setting) *Flag {
 	// base_path, env_path, active_env
-	env := flag.String(EnvFlag, DefaultEnv, "a string representing the environment file to read")
+	env := flag.String(EnvFlag, setting.GetActiveEnvironment(), "a string representing the environment file to read")
 	basePath := flag.String(BasePathFlag, setting.GetBasePath(), "a string to tell where is the base_path to read a yml")
 	envPath := flag.String(EnvPathFlag, setting.GetBasePath(), "a string to tell where is the env_path to read a yml per environment")
 	flag.Parse()

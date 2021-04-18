@@ -9,6 +9,7 @@ const (
 type Setting interface {
 	GetBasePath() string
 	GetEnvironmentPath() string
+	GetActiveEnvironment() string
 	GetName() string
 	GetType() string
 	WithVault() bool
@@ -17,21 +18,23 @@ type Setting interface {
 // SETTING Interface implementation ------------------------------------------------------------------------------------/
 
 type ConfigSetting struct {
-	basePath        string
-	environmentPath string
-	name            string
-	fileType        string
-	withVault       bool
+	basePath          string
+	environmentPath   string
+	activeEnvironment string
+	fileName          string
+	fileType          string
+	withVault         bool
 }
 
-func NewSetting(basePath, environmentPath, fileName, fileType string, withVault bool) *ConfigSetting {
+func NewSetting(basePath, environmentPath, activeEnvironment, fileName, fileType string, withVault bool) *ConfigSetting {
 
 	s := ConfigSetting{
-		basePath:        basePath,
-		environmentPath: environmentPath,
-		name:            fileName,
-		fileType:        fileType,
-		withVault:       withVault,
+		basePath:          basePath,
+		environmentPath:   environmentPath,
+		activeEnvironment: activeEnvironment,
+		fileName:          fileName,
+		fileType:          fileType,
+		withVault:         withVault,
 	}
 	s.CheckDefault()
 	return &s
@@ -70,8 +73,8 @@ func (s *ConfigSetting) CheckDefault() {
 		s.environmentPath = "."
 	}
 
-	if s.name == "" {
-		s.name = FileName
+	if s.fileName == "" {
+		s.fileName = FileName
 	}
 
 	if s.fileType == "" {
@@ -87,8 +90,12 @@ func (s *ConfigSetting) GetEnvironmentPath() string {
 	return s.environmentPath
 }
 
+func (s *ConfigSetting) GetActiveEnvironment() string {
+	return s.activeEnvironment
+}
+
 func (s *ConfigSetting) GetName() string {
-	return s.name
+	return s.fileName
 }
 
 func (s *ConfigSetting) GetType() string {

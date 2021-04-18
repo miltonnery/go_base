@@ -2,6 +2,15 @@ error-mapping:
   path: "."
   filename: application-local
 
+test:
+  boolean-value: true
+  int-value: 2
+  int32-value: 20000
+  int64-value: 2000000
+  float64-value: 20000000.00
+  time-value: "2012-11-01T22:08:41+00:00"
+  duration-value: 10000000000
+
 log:
   startup-phrase:
     title:
